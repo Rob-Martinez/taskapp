@@ -2,18 +2,34 @@
 
 namespace App\Controllers;
 
+
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
+
 class Tasks extends BaseController
 {
     public function index()
     {
+        $model = new \App\Models\TaskModel;
 
-        $data = [
-            ['id' => 1, 'description' => 'First task'],
-            ['id' => 2, 'description' => 'Second task']
-        ];
+        $data = $model->findAll();
 
+        return view("Tasks/index", [
+            'tasks' => $data
+        ]);
+    }
 
-        return view("Tasks/index", ['tasks' => $data]);
+    public function show($id)
+    {
+        $model = new \App\Models\TaskModel;
+
+        $task = $model->find($id);
+
+        return view('Tasks/show', [
+            'task' => $task
+        ]);
+
     }
 }
 

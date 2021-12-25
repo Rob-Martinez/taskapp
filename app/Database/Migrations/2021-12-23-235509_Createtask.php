@@ -10,7 +10,7 @@ class Createtask extends Migration
     {
         $this->forge->addField([
 
-            'id' => [
+            'id'          => [
                 'type'              => 'INT',
                 'constraint'        => 5,
                 'unsigned'          => true,
@@ -19,6 +19,16 @@ class Createtask extends Migration
             'description' => [
                 'type'              => 'VARCHAR',
                 'constraint'        => '128'
+            ],
+            'created_at'  => [
+                'type'              => 'DATETIME',
+                'null'              => true,
+                'default'           => null
+            ],
+            'updated_at'  => [
+                'type'              => 'DATETIME',
+                'null'              => true,
+                'default'           => null
             ]
         ]);
         $this->forge->addPrimaryKey('id');
