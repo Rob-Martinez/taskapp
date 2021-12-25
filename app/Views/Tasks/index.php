@@ -22,8 +22,8 @@
         <?php foreach($tasks as $task): ?>
 
             <li>
-                <a href="<?=site_url('/Tasks/show/') . $task['id'] ?>">
-                    <?= esc($task['description']) ?>
+                <a href="<?=site_url('/Tasks/show/') . $task->id ?>">
+                    <?= esc($task->description) ?>
                 </a>
             </li>
 

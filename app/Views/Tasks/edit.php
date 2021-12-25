@@ -26,15 +26,12 @@
     </ul>
 <?php endif; ?>
 
-<?= form_open("/Tasks/update/" . $task['id']) ?>
+<?= form_open("/Tasks/update/" . $task->id) ?>
 
-    <div>
-        <label for="description">Description</label>
-        <input type="text" name="description" id="description" value="<?= esc($task['description']) ?>">
-    </div>
+    <?= $this->include('Tasks/form') ?>
 
     <button>Save</button>
-    <a href="<?= site_url("/Tasks/show" . $task['id']) ?>">Cancel</a>
+    <a href="<?= site_url("/Tasks/show/" . $task->id) ?>">Cancel</a>
 
 </form>
 
