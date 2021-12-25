@@ -16,12 +16,14 @@
 
     <h1>Tasks</h1>
 
+    <a href="<?= site_url("/Tasks/new") ?>">New Task</a>
+
     <ul>
         <?php foreach($tasks as $task): ?>
 
             <li>
-                <a href="<?=site_url('/tasks/show/') . $task['id'] ?>">
-                    <?= $task['description'] ?>
+                <a href="<?=site_url('/Tasks/show/') . $task['id'] ?>">
+                    <?= esc($task['description']) ?>
                 </a>
             </li>
 
