@@ -11,11 +11,20 @@ use Psr\Log\LoggerInterface;
 
 class Tasks extends BaseController
 {
+
+    private $model;
+
+    public function __construct()
+    {
+
+        $this->model = new \App\Models\TaskModel;
+
+    }
+
     public function index(): string
     {
-        $model = new \App\Models\TaskModel;
 
-        $data = $model->findAll();
+        $data = $this->model->findAll();
 
         return view("Tasks/index", [
             'tasks' => $data
@@ -24,9 +33,8 @@ class Tasks extends BaseController
 
     public function show($id): string
     {
-        $model = new \App\Models\TaskModel;
 
-        $task = $model->find($id);
+        $task = $this->getTaskOr404($id);
 
         return view('Tasks/show', [
             'task' => $task
@@ -49,22 +57,19 @@ class Tasks extends BaseController
      */
     public function create()
     {
-        $model = new \App\Models\TaskModel;
 
         $task = new Task($this->request->getPost());
 
-        $result = $model->insert($task);
+        if ($this->model->insert($task)) {
 
-        if ($model->insert($task)) {
-
-            return redirect()->to("/Tasks/show/{$model->insertID}")
-                ->with('info', "Task Created Successfully");
+            return redirect()->to("/Tasks/show/{$this->model->insertID}")
+                             ->with('info', "Task Created Successfully");
 
 
         } else {
 
             return redirect()->back()
-                ->with('errors', $model->errors())
+                ->with('errors', $this->model->errors())
                 ->with('warning', "Invalid data")
                 ->withInput();
         }
@@ -72,9 +77,8 @@ class Tasks extends BaseController
 
     public function edit($id): string
     {
-        $model = new \App\Models\TaskModel;
 
-        $task = $model->find($id);
+        $task = $this->getTaskOr404($id);
 
         return view('Tasks/edit', [
             'task' => $task
@@ -86,25 +90,61 @@ class Tasks extends BaseController
      */
     public function update($id): \CodeIgniter\HTTP\RedirectResponse
     {
-        $model = new \App\Models\TaskModel;
 
-        $result = $model->update($id, [
-           'description' => $this->request->getPost('description')
-        ]);
+        $task = $this->getTaskOr404($id);
 
-        if ($result) {
+        $task->fill($this->request->getPost());
 
+        if ( ! $task->hasChanged()) {
+
+            return redirect()->back()
+                             ->with('warning', 'Nothing to Update')
+                             ->withInput();
+
+        }
+
+        if ($this->model->save($task)) {
             return redirect()->to("/Tasks/show/$id")
-                             ->with('info', 'Task Updated Successfully');
-
+                ->with('info', 'Task Updated Successfully');
         } else {
 
             return redirect()->back()
-                             ->with('errors', $model->errors())
+                             ->with('errors', $this->model->errors())
                              ->with('warning', "Invalid Data Entry")
                              ->withInput();
 
         }
+    }
+
+    public function delete($id)
+    {
+
+        $task = $this->getTaskOr404($id);
+
+        if($this->request->getMethod() === 'post') {
+
+            $this->model->delete($id);
+
+            return redirect()->to("/Tasks")
+                ->with('info', "Task has been deleted");
+
+        }
+
+        return view('Tasks/delete', [
+            'task' => $task
+        ]);
+
+    }
+
+    private function getTaskOr404($id)
+    {
+        $task = $this->model->find($id);
+
+        if ($task === null) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException("Task with id $id not found");
+        }
+
+        return $task;
     }
 }
 
