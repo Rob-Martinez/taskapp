@@ -25,12 +25,12 @@
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
-<?= form_open("/tasks/create")?>
+<?= form_open("/Tasks/create")?>
 
     <?= $this->include('Tasks/form') ?>
 
     <button>Save</button>
-    <a href="<?= site_url("/tasks") ?>">Cancel</a>
+    <a href="<?= site_url("/Tasks") ?>">Cancel</a>
 
 </form>
 
