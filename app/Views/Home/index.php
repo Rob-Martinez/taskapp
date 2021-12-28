@@ -16,7 +16,7 @@
 
     <h1>Welcome</h1>
 
-    <a href="<?= site_url("/Signup/new") ?>">Sign Up</a>
+    <a href="<?= site_url("/Signup") ?>">Sign Up</a>
 
 
 <?= $this->endSection() ?>

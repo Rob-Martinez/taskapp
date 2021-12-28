@@ -24,9 +24,22 @@ class SignUp extends BaseController
 
         $model = new \App\Models\UserModel;
 
-        $model->insert($user);
+        if ($model->insert($user)) {
 
-        echo "You Are Now Signed Up";
+            return redirect()->to("/Signup/success");
 
+        } else {
+
+            return redirect()->back()
+                             ->with('errors', $model->errors())
+                             ->with('warning', 'Invalid data')
+                             ->withInput();
+
+        }
+    }
+
+    public function success(): string
+    {
+        return view('Signup/success');
     }
 }
